@@ -31,9 +31,11 @@ gh attestation verify "$archive" --repo stoicpickle/wireglyph
 ```
 
 The release archives are checksummed and built by the repository's public,
-SHA-pinned workflow. Alpha binaries are not yet Apple-notarized or Windows
-code-signed, so those operating systems may display an unidentified-developer
-warning.
+SHA-pinned workflow. The initial `v0.1.0-alpha.1` binaries are provenance
+attested but are not Apple-notarized or Windows code-signed. The release
+workflow now fails closed for future tags unless macOS binaries are Developer
+ID-signed and notarized and the Windows executable is Authenticode-signed and
+timestamped. See [release signing](docs/release-signing.md).
 
 ### Install from source
 
@@ -162,8 +164,10 @@ See the [visual-spike decision](docs/adr/0001-visual-spike.md),
 [Checkpoint 0 evidence](docs/checkpoint-0-acceptance.md), and
 [contribution guide](CONTRIBUTING.md).
 
-The automated safety and determinism gates are green. Fresh-user comprehension
-testing and downloadable release archives remain pre-1.0 work.
+The automated safety and determinism gates are green, and release packaging is
+exercised on all supported runners. Platform signing remains fail-closed until
+the external signing identities described above are installed. Fresh-user
+comprehension testing remains pre-1.0 work.
 
 ## License
 
