@@ -1,0 +1,25 @@
+name: Feature request
+description: Propose a focused improvement to repository comprehension
+title: "[Idea]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Comprehension problem
+      description: What is hard to understand in an unfamiliar repository today?
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Truthful evidence source
+      description: What static evidence could support this without implying runtime observation?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Smallest useful slice
+    validations:
+      required: true

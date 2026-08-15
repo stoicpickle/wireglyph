@@ -1,0 +1,52 @@
+[package]
+name = "wireglyph"
+version = "0.1.0-alpha.1"
+edition = "2024"
+rust-version = "1.88"
+description = "A terminal-native repository system map"
+repository = "https://github.com/stoicpickle/wireglyph"
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+keywords = ["tui", "static-analysis", "dependency-graph", "terminal", "codebase"]
+categories = ["command-line-utilities", "development-tools"]
+publish = false
+include = [
+    "/src/**",
+    "/fixtures/beacon_ops.json",
+    "/examples/**",
+    "/tests/**",
+    "/docs/**",
+    "/proof/README.md",
+    "/proof/renders/wireglyph-self-map-overview-140x40.png",
+    "/README.md",
+    "/CHANGELOG.md",
+    "/CODE_OF_CONDUCT.md",
+    "/CONTRIBUTING.md",
+    "/SECURITY.md",
+    "/LICENSE-APACHE",
+    "/LICENSE-MIT",
+]
+
+[features]
+terminal-test-hooks = []
+
+[dependencies]
+clap = { version = "4.6.6", features = ["derive"] }
+crossterm = "0.29.0"
+ctrlc = "3.5.2"
+ignore = "0.4.33"
+ratatui = { version = "0.30.2", default-features = false, features = ["crossterm", "layout-cache"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+tree-sitter = "0.26.12"
+tree-sitter-javascript = "0.25.0"
+tree-sitter-python = "0.25.0"
+tree-sitter-rust = "0.24.2"
+tree-sitter-typescript = "0.23.2"
+toml = "0.9.8"
+unicode-segmentation = "1.13.3"
+unicode-width = "0.2.2"
+
+[dev-dependencies]
+insta = "1.48.0"
+portable-pty = "0.9.0"

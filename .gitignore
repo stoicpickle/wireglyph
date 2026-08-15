@@ -1,0 +1,5 @@
+/target/
+*.profraw
+*.log
+.DS_Store
+/proof/*.svg

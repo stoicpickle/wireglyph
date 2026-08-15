@@ -1,0 +1,40 @@
+name: Bug report
+description: Report reproducible incorrect or unsafe Wireglyph behavior
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include proprietary source code, credentials, or security vulnerabilities. Use the Security tab for private reports.
+  - type: input
+    id: version
+    attributes:
+      label: Wireglyph version or commit
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Operating system and terminal
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Prefer a synthetic repository or public fixture.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed secrets and proprietary source from this report.
+          required: true

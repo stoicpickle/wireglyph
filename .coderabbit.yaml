@@ -1,0 +1,21 @@
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  path_filters:
+    - "!proof/**"
+    - "!target/**"
+  path_instructions:
+    - path: "src/**"
+      instructions: |
+        Focus on terminal restoration, deterministic state, bounds safety,
+        truthful provenance labels, and missing tests rather than style polish.
+    - path: "fixtures/**"
+      instructions: |
+        Check graph referential integrity, evidence completeness, and whether
+        inferred relationships are marked explicitly.
+    - path: "tests/**"
+      instructions: |
+        Focus on false confidence and important uncovered state transitions.
+    - path: "docs/**"
+      instructions: |
+        Check public claims against implemented behavior and explicit limits.

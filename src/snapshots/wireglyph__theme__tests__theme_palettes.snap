@@ -1,0 +1,281 @@
+---
+source: src/theme.rs
+expression: "ThemeName::ALL.map(|theme| (theme.label(), theme.palette()))"
+---
+[
+    (
+        "AMBER // PLOTTER",
+        Palette {
+            background: Rgb(
+                8,
+                7,
+                4,
+            ),
+            panel: Rgb(
+                16,
+                13,
+                8,
+            ),
+            primary: Rgb(
+                214,
+                155,
+                60,
+            ),
+            hot: Rgb(
+                255,
+                211,
+                122,
+            ),
+            secondary: Rgb(
+                118,
+                91,
+                47,
+            ),
+            text: Rgb(
+                241,
+                227,
+                194,
+            ),
+            muted: Rgb(
+                140,
+                128,
+                104,
+            ),
+            grid: Rgb(
+                42,
+                33,
+                20,
+            ),
+            warning: Rgb(
+                240,
+                100,
+                69,
+            ),
+            inferred: Rgb(
+                183,
+                142,
+                100,
+            ),
+        },
+    ),
+    (
+        "GREEN // RADAR",
+        Palette {
+            background: Rgb(
+                4,
+                8,
+                5,
+            ),
+            panel: Rgb(
+                7,
+                16,
+                9,
+            ),
+            primary: Rgb(
+                105,
+                199,
+                109,
+            ),
+            hot: Rgb(
+                183,
+                255,
+                175,
+            ),
+            secondary: Rgb(
+                53,
+                106,
+                61,
+            ),
+            text: Rgb(
+                218,
+                235,
+                216,
+            ),
+            muted: Rgb(
+                115,
+                132,
+                117,
+            ),
+            grid: Rgb(
+                20,
+                43,
+                24,
+            ),
+            warning: Rgb(
+                226,
+                166,
+                74,
+            ),
+            inferred: Rgb(
+                142,
+                173,
+                121,
+            ),
+        },
+    ),
+    (
+        "CYAN // ANALYZER",
+        Palette {
+            background: Rgb(
+                3,
+                8,
+                9,
+            ),
+            panel: Rgb(
+                6,
+                17,
+                19,
+            ),
+            primary: Rgb(
+                72,
+                185,
+                199,
+            ),
+            hot: Rgb(
+                168,
+                245,
+                255,
+            ),
+            secondary: Rgb(
+                45,
+                104,
+                112,
+            ),
+            text: Rgb(
+                220,
+                241,
+                242,
+            ),
+            muted: Rgb(
+                115,
+                137,
+                139,
+            ),
+            grid: Rgb(
+                18,
+                48,
+                54,
+            ),
+            warning: Rgb(
+                224,
+                161,
+                91,
+            ),
+            inferred: Rgb(
+                122,
+                166,
+                164,
+            ),
+        },
+    ),
+    (
+        "RED // SCHEMATIC",
+        Palette {
+            background: Rgb(
+                9,
+                5,
+                5,
+            ),
+            panel: Rgb(
+                19,
+                9,
+                9,
+            ),
+            primary: Rgb(
+                201,
+                92,
+                74,
+            ),
+            hot: Rgb(
+                255,
+                154,
+                125,
+            ),
+            secondary: Rgb(
+                112,
+                58,
+                50,
+            ),
+            text: Rgb(
+                240,
+                222,
+                216,
+            ),
+            muted: Rgb(
+                140,
+                118,
+                112,
+            ),
+            grid: Rgb(
+                49,
+                22,
+                17,
+            ),
+            warning: Rgb(
+                242,
+                179,
+                78,
+            ),
+            inferred: Rgb(
+                169,
+                133,
+                109,
+            ),
+        },
+    ),
+    (
+        "MONO // FIELD",
+        Palette {
+            background: Rgb(
+                7,
+                7,
+                7,
+            ),
+            panel: Rgb(
+                15,
+                15,
+                15,
+            ),
+            primary: Rgb(
+                184,
+                184,
+                173,
+            ),
+            hot: Rgb(
+                255,
+                255,
+                255,
+            ),
+            secondary: Rgb(
+                102,
+                104,
+                98,
+            ),
+            text: Rgb(
+                230,
+                230,
+                222,
+            ),
+            muted: Rgb(
+                133,
+                133,
+                126,
+            ),
+            grid: Rgb(
+                36,
+                37,
+                33,
+            ),
+            warning: Rgb(
+                255,
+                255,
+                255,
+            ),
+            inferred: Rgb(
+                154,
+                154,
+                146,
+            ),
+        },
+    ),
+]
