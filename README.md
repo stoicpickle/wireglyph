@@ -15,7 +15,29 @@ observed runtime traces.
 
 ## Install
 
-Wireglyph currently installs from source and requires Rust 1.88 or newer:
+### Download an alpha archive
+
+Prebuilt archives are published on the
+[Releases page](https://github.com/stoicpickle/wireglyph/releases) for Linux
+x86_64, macOS Apple Silicon, macOS Intel, and Windows x86_64. Each archive
+contains the binary, README, changelog, and both licenses.
+
+Download the matching archive and `SHA256SUMS`. Verify its provenance with the
+GitHub CLI before extracting it:
+
+```sh
+archive=wireglyph-v0.1.0-alpha.1-aarch64-apple-darwin.tar.gz
+gh attestation verify "$archive" --repo stoicpickle/wireglyph
+```
+
+The release archives are checksummed and built by the repository's public,
+SHA-pinned workflow. Alpha binaries are not yet Apple-notarized or Windows
+code-signed, so those operating systems may display an unidentified-developer
+warning.
+
+### Install from source
+
+Building from source requires Rust 1.88 or newer:
 
 ```sh
 cargo install --git https://github.com/stoicpickle/wireglyph --locked
