@@ -43,7 +43,7 @@ tree-sitter-javascript = "0.25.0"
 tree-sitter-python = "0.25.0"
 tree-sitter-rust = "0.24.2"
 tree-sitter-typescript = "0.23.2"
-toml = "0.9.8"
+toml = "1.1.4"
 unicode-segmentation = "1.13.3"
 unicode-width = "0.2.2"
 

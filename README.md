@@ -22,20 +22,33 @@ Prebuilt archives are published on the
 x86_64, macOS Apple Silicon, macOS Intel, and Windows x86_64. Each archive
 contains the binary, README, changelog, and both licenses.
 
-Download the matching archive and `SHA256SUMS`. Verify its provenance with the
-GitHub CLI before extracting it:
+With the GitHub CLI installed, this macOS Apple Silicon example downloads,
+checks, verifies, and installs the current alpha:
 
 ```sh
-archive=wireglyph-v0.1.0-alpha.1-aarch64-apple-darwin.tar.gz
+version=v0.1.0-alpha.1
+target=aarch64-apple-darwin
+archive="wireglyph-${version}-${target}.tar.gz"
+gh release download "$version" --repo stoicpickle/wireglyph \
+  --pattern "$archive" --pattern SHA256SUMS
+grep "  $archive$" SHA256SUMS | shasum -a 256 -c -
 gh attestation verify "$archive" --repo stoicpickle/wireglyph
+tar -xzf "$archive"
+mkdir -p "$HOME/.local/bin"
+install -m 755 "wireglyph-${version}-${target}/wireglyph" "$HOME/.local/bin/wireglyph"
 ```
 
-The release archives are checksummed and built by the repository's public,
-SHA-pinned workflow. The initial `v0.1.0-alpha.1` binaries are provenance
-attested but are not Apple-notarized or Windows code-signed. The release
-workflow now fails closed for future tags unless macOS binaries are Developer
-ID-signed and notarized and the Windows executable is Authenticode-signed and
-timestamped. See [release signing](docs/release-signing.md).
+Use `sha256sum -c` instead of `shasum -a 256 -c` on Linux. On Windows, use
+`Get-FileHash -Algorithm SHA256`, `gh attestation verify`, and
+`Expand-Archive` with the matching ZIP.
+
+The release archives are built by the repository's public, SHA-pinned workflow,
+checksummed, and provenance-attested. They are intentionally not Apple-notarized
+or Windows code-signed. macOS Gatekeeper or Windows SmartScreen may therefore
+show an unidentified-developer warning. Verify the checksum and attestation,
+then use the operating system's documented override only if you trust the
+artifact; building from source avoids downloading an unsigned binary. See the
+[release integrity notes](docs/release-integrity.md).
 
 ### Install from source
 
@@ -165,9 +178,9 @@ See the [visual-spike decision](docs/adr/0001-visual-spike.md),
 [contribution guide](CONTRIBUTING.md).
 
 The automated safety and determinism gates are green, and release packaging is
-exercised on all supported runners. Platform signing remains fail-closed until
-the external signing identities described above are installed. Fresh-user
-comprehension testing remains pre-1.0 work.
+exercised on all supported runners. Release archives remain unsigned but carry
+checksums and GitHub provenance attestations. Fresh-user comprehension testing
+remains pre-1.0 work.
 
 ## License
 

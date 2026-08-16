@@ -1103,6 +1103,9 @@ fn manifest_entry_paths(root: &Path, file_paths: &BTreeSet<String>) -> BTreeSet<
             ),
             _ => {}
         }
+        if let Some(exports) = value.get("exports") {
+            collect_root_export_paths(exports, &mut raw);
+        }
         entries.extend(
             raw.into_iter()
                 .filter_map(|path| lexical_join(Path::new(""), Path::new(&path)))
@@ -1117,6 +1120,37 @@ fn manifest_entry_paths(root: &Path, file_paths: &BTreeSet<String>) -> BTreeSet<
             .cloned(),
     );
     entries
+}
+
+fn collect_root_export_paths(exports: &Value, paths: &mut Vec<String>) {
+    let root_export = match exports {
+        Value::Object(entries) if entries.keys().any(|key| key.starts_with('.')) => {
+            entries.get(".")
+        }
+        _ => Some(exports),
+    };
+    if let Some(root_export) = root_export {
+        collect_runtime_export_paths(root_export, paths);
+    }
+}
+
+fn collect_runtime_export_paths(value: &Value, paths: &mut Vec<String>) {
+    match value {
+        Value::String(path) => paths.push(path.clone()),
+        Value::Array(fallbacks) => {
+            for fallback in fallbacks {
+                collect_runtime_export_paths(fallback, paths);
+            }
+        }
+        Value::Object(conditions) => {
+            for (condition, target) in conditions {
+                if condition != "types" && !condition.starts_with('.') {
+                    collect_runtime_export_paths(target, paths);
+                }
+            }
+        }
+        _ => {}
+    }
 }
 
 fn rust_package_name(root: &Path) -> Option<String> {
@@ -1476,6 +1510,72 @@ mod tests {
         let first = serde_json::to_string(&graph).unwrap();
         let second = serde_json::to_string(&scan_project(&root).unwrap()).unwrap();
         assert_eq!(first, second);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn package_exports_select_runtime_entries_without_types_or_subpaths() {
+        let root = temp_project("package-exports");
+        write(
+            &root,
+            "package.json",
+            r#"{
+                "exports": {
+                    ".": {
+                        "types": "./index.d.ts",
+                        "import": "./index.js",
+                        "require": "./index.cjs"
+                    },
+                    "./extra": "./extra.js"
+                }
+            }"#,
+        );
+        write(&root, "index.js", "export const value = true;\n");
+        write(&root, "index.cjs", "module.exports = true;\n");
+        write(
+            &root,
+            "index.d.ts",
+            "export declare const value: boolean;\n",
+        );
+        write(&root, "index.test-d.ts", "export {};\n");
+        write(&root, "extra.js", "export const extra = true;\n");
+
+        let graph = scan_project(&root).unwrap();
+        let entry_paths = graph
+            .nodes
+            .iter()
+            .filter(|node| matches!(node.kind, crate::model::NodeKind::Entry))
+            .map(|node| node.evidence.path.as_str())
+            .collect::<Vec<_>>();
+
+        assert_eq!(entry_paths, ["index.cjs", "index.js"]);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn package_exports_supports_a_root_condition_map() {
+        let root = temp_project("package-root-conditions");
+        write(
+            &root,
+            "package.json",
+            r#"{"exports":{"types":"./index.d.ts","default":"./index.js"}}"#,
+        );
+        write(&root, "index.js", "export const value = true;\n");
+        write(
+            &root,
+            "index.d.ts",
+            "export declare const value: boolean;\n",
+        );
+        write(&root, "index.test-d.ts", "export {};\n");
+
+        let graph = scan_project(&root).unwrap();
+        let entry = graph
+            .nodes
+            .iter()
+            .find(|node| matches!(node.kind, crate::model::NodeKind::Entry))
+            .expect("runtime export should be selected");
+
+        assert_eq!(entry.evidence.path, "index.js");
         fs::remove_dir_all(root).unwrap();
     }
 
