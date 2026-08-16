@@ -4,11 +4,14 @@ All notable changes to Wireglyph will be recorded here.
 
 ## Unreleased
 
-- Require Developer ID signing and Apple notarization for future macOS release
-  archives, and Authenticode signing with an RFC 3161 timestamp for future
-  Windows release archives.
-- Isolate platform signing credentials behind a tag-restricted GitHub
-  environment and remove temporary credential material on every exit path.
+- Recognize runtime entry points declared through the modern `package.json`
+  `exports` field without treating TypeScript declaration or package subpath
+  exports as application entries.
+- Keep public release archives unsigned while retaining SHA-256 checksums and
+  GitHub provenance attestations, with explicit platform-warning guidance.
+- Add complete download, integrity verification, extraction, and installation
+  instructions for release archives.
+- Update the TOML parser dependency to 1.1.4.
 
 ## 0.1.0-alpha.1
 
