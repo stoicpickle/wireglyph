@@ -1869,7 +1869,7 @@ fn render_footer(frame: &mut Frame<'_>, area: Rect, app: &App, palette: Palette,
     };
     let return_hint = if app.active_panel != crate::Panel::Map {
         Some("MAP  ")
-    } else if is_fixture(app) && app.flow_hop.is_some() {
+    } else if is_fixture(app) && app.current_flow().is_some() && app.flow_hop.is_some() {
         Some("CLEAR  ")
     } else if !is_fixture(app) && app.map_mode != MapMode::Overview {
         Some("BACK  ")
@@ -2466,6 +2466,13 @@ mod tests {
             assert!(screen.contains("ESC CLEAR"), "{screen}");
             assert!(!screen.contains("ESC BACK"), "{screen}");
             assert!(screen.contains("EXIT"), "{screen}");
+        }
+
+        app.active_trace = None;
+        app.flow_hop = Some(usize::MAX);
+        for (width, height) in [(100, 30), (140, 40)] {
+            let stale = render_for_test(&app, width, height);
+            assert!(!stale.contains("ESC CLEAR"), "{stale}");
         }
     }
 
