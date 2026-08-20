@@ -6,7 +6,8 @@ All notable changes to Wireglyph will be recorded here.
 
 - Refuse folders with no supported source files instead of reporting an empty
   `SCOPED OK` graph.
-- Show state-aware `Esc` back and drawer-close hints in the live command footer.
+- Show state-aware `Esc` back, flow-clear, and drawer-close hints in the live
+  command footer.
 - Recognize runtime entry points declared through the modern `package.json`
   `exports` field without treating TypeScript declaration or package subpath
   exports as application entries.

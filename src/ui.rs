@@ -1869,6 +1869,8 @@ fn render_footer(frame: &mut Frame<'_>, area: Rect, app: &App, palette: Palette,
     };
     let return_hint = if app.active_panel != crate::Panel::Map {
         Some("MAP  ")
+    } else if is_fixture(app) && app.flow_hop.is_some() {
+        Some("CLEAR  ")
     } else if !is_fixture(app) && app.map_mode != MapMode::Overview {
         Some("BACK  ")
     } else {
@@ -2448,7 +2450,22 @@ mod tests {
             app.active_panel = crate::Panel::Inspector;
             let drawer = render_for_test(&app, width, height);
             assert!(drawer.contains("ESC MAP"), "{drawer}");
+            assert!(!drawer.contains("ESC BACK"), "{drawer}");
             assert!(drawer.contains("EXIT"), "{drawer}");
+        }
+    }
+
+    #[test]
+    fn fixture_active_flow_exposes_escape_clear_at_both_sizes() {
+        let mut app = App::new().expect("fixture should load");
+        assert!(app.select_static_flow_hop(0));
+        app.active_panel = crate::Panel::Map;
+
+        for (width, height) in [(100, 30), (140, 40)] {
+            let screen = render_for_test(&app, width, height);
+            assert!(screen.contains("ESC CLEAR"), "{screen}");
+            assert!(!screen.contains("ESC BACK"), "{screen}");
+            assert!(screen.contains("EXIT"), "{screen}");
         }
     }
 
