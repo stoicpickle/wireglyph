@@ -188,6 +188,28 @@ fn json_cli_defaults_to_working_directory_and_rejects_a_missing_root() {
         "{}",
         String::from_utf8_lossy(&output.stderr)
     );
+
+    let unsupported = TempProject::new("unsupported-cli");
+    unsupported.write("main.go", "package main\n\nfunc main() {}\n");
+    let output = Command::new(env!("CARGO_BIN_EXE_wireglyph"))
+        .args([
+            "scan",
+            unsupported
+                .path()
+                .to_str()
+                .expect("temp path should be UTF-8"),
+        ])
+        .output()
+        .expect("unsupported-source command should run");
+    assert!(!output.status.success());
+    assert!(output.stdout.is_empty(), "failed scans must not emit JSON");
+    assert!(
+        String::from_utf8_lossy(&output.stderr).contains(
+            "no supported Rust, JavaScript/TypeScript, or Python source files were found; choose a supported package or subdirectory"
+        ),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
 }
 
 fn render(app: &App, width: u16, height: u16) -> String {

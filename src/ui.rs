@@ -1867,15 +1867,32 @@ fn render_footer(frame: &mut Frame<'_>, area: Rect, app: &App, palette: Palette,
             app.motion.label(),
         )
     };
+    let return_hint = if app.active_panel != crate::Panel::Map {
+        Some("MAP  ")
+    } else if is_fixture(app) && app.current_flow().is_some() && app.flow_hop.is_some() {
+        Some("CLEAR  ")
+    } else if !is_fixture(app) && app.map_mode != MapMode::Overview {
+        Some("BACK  ")
+    } else {
+        None
+    };
+    let mut commands = vec![Span::styled(middle, Style::new().fg(palette.text))];
+    if let Some(label) = return_hint {
+        commands.push(key("ESC", palette));
+        commands.push(Span::styled(label, Style::new().fg(palette.text)));
+    }
+    commands.extend([
+        key("T", palette),
+        Span::styled(" THEME  ", Style::new().fg(palette.text)),
+        key("Q", palette),
+        Span::styled(" EXIT", Style::new().fg(palette.text)),
+    ]);
     frame.render_widget(
-        Paragraph::new(TextLine::from(vec![
-            Span::styled(middle, Style::new().fg(palette.text)),
-            key("T", palette),
-            Span::styled(" THEME  ", Style::new().fg(palette.text)),
-            key("Q", palette),
-            Span::styled(" EXIT", Style::new().fg(palette.text)),
-        ]))
-        .block(instrument_block("COMMAND", palette.primary, palette.panel)),
+        Paragraph::new(TextLine::from(commands)).block(instrument_block(
+            "COMMAND",
+            palette.primary,
+            palette.panel,
+        )),
         area,
     );
 }
@@ -2400,6 +2417,7 @@ mod tests {
 
             let overview = render_for_test(&app, width, height);
             assert!(overview.contains("SYSTEM MAP // OVERVIEW"), "{overview}");
+            assert!(!overview.contains("ESC BACK"), "{overview}");
             assert!(
                 overview.contains("OVERVIEW // ×TOTAL ?INFERRED ·INTERNAL"),
                 "{overview}"
@@ -2417,6 +2435,8 @@ mod tests {
             let focus = render_for_test(&app, width, height);
             assert!(focus.contains("SYSTEM MAP // FOCUS"), "{focus}");
             assert!(focus.contains("FOCUS // 01-HOP STATIC IMPORTS"), "{focus}");
+            assert!(focus.contains("ESC BACK"), "{focus}");
+            assert!(focus.contains("EXIT"), "{focus}");
 
             app.active_trace = app.graph.flows.first().cloned();
             app.flow_hop = Some(0);
@@ -2424,6 +2444,35 @@ mod tests {
             let trace = render_for_test(&app, width, height);
             assert!(trace.contains("SYSTEM MAP // STATIC PATH"), "{trace}");
             assert!(trace.contains("STATIC PATH  PAUSE  01/01"), "{trace}");
+            assert!(trace.contains("ESC BACK"), "{trace}");
+            assert!(trace.contains("EXIT"), "{trace}");
+
+            app.active_panel = crate::Panel::Inspector;
+            let drawer = render_for_test(&app, width, height);
+            assert!(drawer.contains("ESC MAP"), "{drawer}");
+            assert!(!drawer.contains("ESC BACK"), "{drawer}");
+            assert!(drawer.contains("EXIT"), "{drawer}");
+        }
+    }
+
+    #[test]
+    fn fixture_active_flow_exposes_escape_clear_at_both_sizes() {
+        let mut app = App::new().expect("fixture should load");
+        assert!(app.select_static_flow_hop(0));
+        app.active_panel = crate::Panel::Map;
+
+        for (width, height) in [(100, 30), (140, 40)] {
+            let screen = render_for_test(&app, width, height);
+            assert!(screen.contains("ESC CLEAR"), "{screen}");
+            assert!(!screen.contains("ESC BACK"), "{screen}");
+            assert!(screen.contains("EXIT"), "{screen}");
+        }
+
+        app.active_trace = None;
+        app.flow_hop = Some(usize::MAX);
+        for (width, height) in [(100, 30), (140, 40)] {
+            let stale = render_for_test(&app, width, height);
+            assert!(!stale.contains("ESC CLEAR"), "{stale}");
         }
     }
 

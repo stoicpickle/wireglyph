@@ -118,13 +118,16 @@ are explicitly inferred.
 
 Wireglyph currently refuses projects above 40 supported source files, graphs
 above 40 nodes, and graphs above 400 edges. Scan a focused crate, package, or
-subdirectory when a repository is larger.
+subdirectory when a repository is larger. A folder containing no supported
+source files is refused with an actionable error instead of an empty
+`SCOPED OK` graph.
 
-Compiler aliases, dynamic imports, package export maps, Python environments,
-Rust macro expansion, build-script-generated modules, generated code, and
-unsupported languages remain outside the map. `SCOPED OK` means the bounded
-scan completed cleanly—not that Wireglyph has proven the repository's complete
-architecture.
+Wireglyph recognizes root entry points declared through `package.json`
+`exports`, but it does not resolve export-map aliases or package subpaths.
+Compiler aliases, dynamic imports, Python environments, Rust macro expansion,
+build-script-generated modules, generated code, and unsupported languages
+remain outside the map. `SCOPED OK` means the bounded scan completed cleanly—not
+that Wireglyph has proven the repository's complete architecture.
 
 ## Static paths are not runtime traces
 
