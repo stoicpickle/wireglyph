@@ -45,6 +45,7 @@ const RUST_QUERY: &str = r#"
 #[derive(Debug)]
 pub enum ScanError {
     InvalidRoot(String),
+    NoSupportedSources,
     Limit(String),
     Infrastructure(String),
 }
@@ -53,6 +54,10 @@ impl fmt::Display for ScanError {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::InvalidRoot(message) => write!(formatter, "invalid project: {message}"),
+            Self::NoSupportedSources => write!(
+                formatter,
+                "scan refused: no supported Rust, JavaScript/TypeScript, or Python source files were found; choose a supported package or subdirectory"
+            ),
             Self::Limit(message) => write!(formatter, "scan refused: {message}"),
             Self::Infrastructure(message) => write!(formatter, "scan failed: {message}"),
         }
@@ -164,6 +169,9 @@ pub fn scan_project(root: impl AsRef<Path>) -> Result<Graph, ScanError> {
         .to_owned();
 
     let (files, mut summary) = discover_sources(&canonical_root)?;
+    if summary.files_discovered == 0 && summary.traversal_errors == 0 {
+        return Err(ScanError::NoSupportedSources);
+    }
     let file_paths: BTreeSet<_> = files.iter().map(|file| file.relative.clone()).collect();
     let mut facts = Vec::new();
 

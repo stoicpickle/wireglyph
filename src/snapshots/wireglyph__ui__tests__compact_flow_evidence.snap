@@ -31,5 +31,5 @@ expression: "render_for_test(&app, 100, 30)"
 │  ▷ STATIC PATH // POSSIBLE STRUCTURAL ROUTE⠤⠇⠉⠉⠉⡏⠉⠉⠉⠉⠉│                                          │
 └───────────────────────────────────────────────────────└──────────────────────────────────────────┘
 ┌ COMMAND ─────────────────────────────────────────────────────────────────────────────────────────┐
-│←→ NODE  F FLOW  ,. STEP  SPACE PLAY  M FULL  E DRAWER   T  THEME   Q  EXIT                       │
+│←→ NODE  F FLOW  ,. STEP  SPACE PLAY  M FULL  E DRAWER   ESC MAP   T  THEME   Q  EXIT             │
 └──────────────────────────────────────────────────────────────────────────────────────────────────┘
